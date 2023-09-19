@@ -1,0 +1,19 @@
+{
+  "name": "botafeur",
+  "module": "src/index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "conjugation-fr": "^0.3.3",
+    "discord.js": "^14.13.0",
+    "fr-compromise": "^0.2.8",
+    "winston": "^3.10.0",
+    "winston-daily-rotate-file": "^4.7.1",
+    "winston-discord-transport": "^1.3.0"
+  }
+}

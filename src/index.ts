@@ -59,6 +59,8 @@ client.on('ready', async () => {
     ],
     permissions: [
       'SendMessages',
+      'ViewAuditLog',
+      'ViewChannel',
       'UseApplicationCommands',
       'EmbedLinks',
       'ReadMessageHistory'

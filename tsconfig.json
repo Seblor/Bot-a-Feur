@@ -1,6 +1,7 @@
 {
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "testing/**/*"
   ],
   "exclude": [
     "./src/data/**/*.json",

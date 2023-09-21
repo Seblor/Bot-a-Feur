@@ -22,8 +22,6 @@ Le saviez-vous ? Minecraft-France utilise [Plume](<https://plume.red>) pour aide
 Le saviez-vous ? C'est Seblor qui m'a créé ! (En plus il est beau)`,
   `§
 Le saviez-vous ? Il y a [un timelapse de mon développement](<https://www.youtube.com/watch?v=dQw4w9WgXcQ>)`,
-  `§
-Le saviez-vous ? Ce vendredi mon créateur fête ses 10 ans dans le staff de Minecraft-France !`,
   ...newMessageEffects,
   ...Array(50).fill('§') // Filling the array with 50 '$' (a no-op modifier) to decrease the chance of getting a modified reply
 ]

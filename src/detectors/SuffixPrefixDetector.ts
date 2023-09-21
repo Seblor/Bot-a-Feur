@@ -33,8 +33,6 @@ export default class SuffixPrefixDetector extends Detector {
     const reference = await message.fetchReference().catch(() => null)
     const isSelfTarget = (reference && reference.author.id === message.client.user.id) ?? false
 
-    console.log(compromise(cleanMessageContent(message).toLowerCase()).json());
-
     const compromiseMatch = compromise(cleanMessageContent(message).toLowerCase()).match(`[<prefix>(!quoi){0,2} (#Verb|faire)? #Preposition?] quoi [<suffix2prefix>#Verb]? [<suffix>(#Determiner !quoi|!quoi)?]?$`)
 
     if (compromiseMatch == null || compromiseMatch.length === 0) {

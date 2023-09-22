@@ -12,7 +12,7 @@ const answers: Array<string> = [
 
 export default class QuoicoubehDetector extends Detector {
   protected detect(message: Message): boolean {
-    return /(?:^|\b)quoicoubeh(?:\b|$)/i.test(cleanMessageContent(message))
+    return /(?:^|\b)(quoi)?coubeh(?:\b|$)/i.test(cleanMessageContent(message))
   }
 
   protected getChanceToReply(message: Message): number {

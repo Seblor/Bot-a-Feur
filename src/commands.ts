@@ -30,14 +30,14 @@ const commands = {
       const channel = inter.options.getChannel('salon', true)
 
       switch (subcommand) {
-        case 'add':
+        case 'ajouter':
           await addChannelToIgnoreList(channel.id, inter.guildId ?? '')
           void inter.reply({
             content: `Le salon ${channel.name} (${channel.id}) a été ajouté à la liste des salons ignorés`,
             ephemeral: true
           })
           break
-        case 'remove':
+        case 'retirer':
           await removeChannelFromIgnoreList(channel.id)
           void inter.reply({
             content: `Le salon ${channel.name} (${channel.id}) a été retiré de la liste des salons ignorés`,

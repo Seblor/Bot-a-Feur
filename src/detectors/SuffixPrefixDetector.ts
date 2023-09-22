@@ -49,7 +49,7 @@ export default class SuffixPrefixDetector extends Detector {
 
     let replyPrefix = trimPrefix((compromiseMatch.groups('prefix') as any)?.text().trim() ?? '')
     const numberOfWordsInPrefix = replyPrefix.split(' ').length
-    if (numberOfWordsInPrefix > 5) {
+    if (numberOfWordsInPrefix > 7) {
       replyPrefix = ''
     }
     const replysuffixToPrefix = (compromiseMatch.groups('suffix2prefix') as any)?.text().trim() ?? ''

@@ -42,7 +42,7 @@ export default class SuffixPrefixDetector extends Detector {
     return this.conjugateResponse(compromiseMatch, isSelfTarget)
   }
 
-  conjugateResponse(compromiseMatch: any, isSelfTarget: boolean = false): string {
+  conjugateResponse(compromiseMatch: any, isSelfTarget: boolean = false): string | null {
     const parsed = compromiseMatch.json() as CompromiseResult[]
 
     const result = parsed[0]
@@ -50,7 +50,7 @@ export default class SuffixPrefixDetector extends Detector {
     let replyPrefix = trimPrefix((compromiseMatch.groups('prefix') as any)?.text().trim() ?? '')
     const numberOfWordsInPrefix = replyPrefix.split(' ').length
     if (numberOfWordsInPrefix > 7) {
-      replyPrefix = ''
+      return null // Too long, pass to next detector
     }
     const replysuffixToPrefix = (compromiseMatch.groups('suffix2prefix') as any)?.text().trim() ?? ''
     const replySuffix = (compromiseMatch.groups('suffix') as any)?.text().trim() ?? ''

@@ -1,6 +1,7 @@
-import { Message } from "discord.js"
+import { GuildBasedChannel, Message } from "discord.js"
 import firstDetector from "./detectors"
 import logger from "./logger"
+import { getIgnoredChannels } from "./db"
 
 const newMessageEffects = [
   async (message: Message, reply: string) => {
@@ -36,6 +37,16 @@ T'as cru que je ne t'aurai pas, petit malin ?`,
 ]
 
 export async function newMessageListener(message: Message): Promise<void> {
+  if (message.guildId === null) {
+    return
+  }
+
+  const ignoredChannels = getIgnoredChannels(message.guildId).map(r => r.channelId)
+  const messageChannel = message.channel as GuildBasedChannel
+  if (ignoredChannels.includes(messageChannel.id) || ignoredChannels.includes(messageChannel.parentId ?? '')) {
+    return
+  }
+
   const replyString = await firstDetector.createReply(message)
   if (replyString) {
     const modifier = newMessageModifiers[Math.floor(Math.random() * newMessageModifiers.length)]
@@ -48,6 +59,16 @@ export async function newMessageListener(message: Message): Promise<void> {
 }
 
 export async function messageEditListener(message: Message): Promise<void> {
+  if (message.guildId === null) {
+    return
+  }
+
+  const ignoredChannels = getIgnoredChannels(message.guildId).map(r => r.channelId)
+  const messageChannel = message.channel as GuildBasedChannel
+  if (ignoredChannels.includes(messageChannel.id) || ignoredChannels.includes(messageChannel.parentId ?? '')) {
+    return
+  }
+
   const replyString = await firstDetector
     .createReply(message)
     .catch((e) => {

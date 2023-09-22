@@ -183,6 +183,12 @@ const commands = {
       const feurAnswerPercentage = getSetting(inter.guildId, 'feurAnswerPercentage')
       const mentionAnswerPercentage = getSetting(inter.guildId, 'mentionAnswerPercentage')
 
+      let ignoredChannelsString = getIgnoredChannels(inter.guildId).map(channel => `<#${channel.channelId}>`).join(', ') || 'Aucuns'
+
+      if (ignoredChannelsString.length > 1024) {
+        ignoredChannelsString = ignoredChannelsString.substring(0, 1020) + '...'
+      }
+
       void inter.reply({
         files: [new AttachmentBuilder('./assets/logo.png').setName('logo.png')],
         embeds: [
@@ -217,7 +223,7 @@ const commands = {
               },
               {
                 name: 'Salons ignorés',
-                value: getIgnoredChannels(inter.guildId).map(channel => `<#${channel.channelId}>`).join(', ') || 'Aucuns',
+                value: ignoredChannelsString,
                 inline: false
               }
             ])

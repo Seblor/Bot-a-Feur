@@ -65,7 +65,7 @@ export async function messageEditListener(message: Message): Promise<void> {
 
   const ignoredChannels = getIgnoredChannels(message.guildId).map(r => r.channelId)
   const messageChannel = message.channel as GuildBasedChannel
-  if (ignoredChannels.includes(messageChannel.id) || ignoredChannels.includes(messageChannel.parentId ?? '')) {
+  if (ignoredChannels.includes(messageChannel.id) || ignoredChannels.includes(messageChannel.parentId ?? '') || ) {
     return
   }
 

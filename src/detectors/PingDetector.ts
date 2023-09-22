@@ -16,7 +16,7 @@ export default class PingDetector extends Detector {
       return false
     }
 
-    return message.mentions.parsedUsers.has(message.client.user.id)
+    return message.mentions.has(message.client.user)
   }
 
   protected getChanceToReply(message: Message): number {

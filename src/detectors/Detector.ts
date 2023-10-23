@@ -40,9 +40,9 @@ export default class Detector {
       if (detected !== null) {
         return detected
       }
-      if (this.nextDetector) {
-        return this.nextDetector.createReply(message)
-      }
+    }
+    if (this.nextDetector) {
+      return this.nextDetector.createReply(message)
     }
     return Promise.resolve('')
   }

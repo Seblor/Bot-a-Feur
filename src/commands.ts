@@ -304,12 +304,12 @@ const commands = {
                 inline: true
               },
               {
-                name: 'Salons ignorés',
+                name: 'Salon ignoré',
                 value: ignoredChannelsString,
                 inline: false
               },
               {
-                name: 'Rôles ignorés',
+                name: 'Rôle ignoré',
                 value: ignoredRolesId ? `<@&${ignoredRolesId}>` : 'Aucun',
                 inline: true
               },

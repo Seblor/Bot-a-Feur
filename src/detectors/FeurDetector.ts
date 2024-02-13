@@ -1,7 +1,6 @@
 import { Message } from "discord.js";
 import Detector from "./Detector";
 import { cleanMessageContent } from "../utils/strings";
-import { getSetting } from "../db";
 
 const answers: Array<string> = [
   "Toi t'es un bon",

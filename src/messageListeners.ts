@@ -17,8 +17,10 @@ Haha ! Je t'ai bien eu !`)
 const newMessageModifiers: Array<string | ((message: Message, reply: string) => void)> = [
   `§
 Le saviez-vous ? Vous pouvez m'ajouter à votre serveur, je suis configurable !`,
-  `§
-Le saviez-vous ? Minecraft-France utilise [Plume](<https://plume.red>) pour aider à la modération !`,
+  async (message: Message, reply: string) => message.guildId === '113756088230215687'
+    ? `${reply}
+Le saviez-vous ? Minecraft-France utilise [Plume](<https://plume.red>) pour aider à la modération !`
+    : reply,
   `§
 Le saviez-vous ? C'est Seblor qui m'a créé ! (En plus il est beau)`,
   `§

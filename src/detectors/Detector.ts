@@ -44,7 +44,14 @@ export default class Detector {
       return Promise.reject(new Error('No guild ID'))
     }
 
-    const threshold = this.getChanceToReply(message)
+    const ignoredRoleId = getSetting(message.guildId, 'ignoredRoleId')
+    if (ignoredRoleId !== null && message.member?.roles.cache.has(ignoredRoleId)) {
+      return Promise.resolve('')
+    }
+
+    const forcedRoleId = getSetting(message.guildId, 'forcedAnswerRoleId')
+
+    const threshold = forcedRoleId != null ? 100 : this.getChanceToReply(message)
 
     triggersChecklist = triggersChecklist ?? createTriggersChecklist()
 

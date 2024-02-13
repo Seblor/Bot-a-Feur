@@ -7,6 +7,7 @@ const commands = {
       .setName('channel-ignore')
       .setDescription('Ajoute ou retire un salon de la liste des salons ignorés')
       .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+      .setDMPermission(false)
       .addSubcommand(subcommand => subcommand
         .setName('ajouter')
         .setDescription('Ajoute un salon à la liste des salons ignorés')
@@ -47,11 +48,54 @@ const commands = {
       }
     }
   },
+  'retire-role': {
+    command: new SlashCommandBuilder()
+      .setName('retire-role')
+      .setDescription('Retire un rôle dans la configuration')
+      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+      .setDMPermission(false)
+      .addSubcommand(subcommand => subcommand
+        .setName('ignore')
+        .setDescription('Retire le rôle configuré pour les personnes ignorées du bot')
+      )
+      .addSubcommand(subcommand => subcommand
+        .setName('force')
+        .setDescription('Retire le rôle configuré pour les personnes avec réponse forcée (100% de chance de réponse)')
+      ),
+    run: async (inter: ChatInputCommandInteraction) => {
+      const subcommand = inter.options.getSubcommand()
+
+      if (inter.guildId == null) {
+        return inter.reply({
+          content: `Une erreur est survenue`,
+          ephemeral: true
+        })
+      }
+
+      switch (subcommand) {
+        case 'ignore':
+          setSetting(inter.guildId, 'ignoredRoleId', null)
+          void inter.reply({
+            content: `Le rôle pour les personnes ignorées du bot a été retiré`,
+            ephemeral: true
+          })
+          break
+        case 'force':
+          setSetting(inter.guildId, 'forcedAnswerRoleId', null)
+          void inter.reply({
+            content: `Le rôle pour les personnes avec réponse forcée (100% de chance de réponse) a été retiré`,
+            ephemeral: true
+          })
+          break
+      }
+    }
+  },
   'set-config': {
     command: new SlashCommandBuilder()
       .setName('set-config')
       .setDescription('Change la configuration du bot')
       .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+      .setDMPermission(false)
       .addNumberOption(option => option
         .setName('chance_de_reponse_quoi')
         .setDescription('Le pourcentage de chance de réponse à un "quoi"')
@@ -70,6 +114,16 @@ const commands = {
       .addNumberOption(option => option
         .setName('chance_de_reponse_ping')
         .setDescription('Le pourcentage de chance de réponse à un ping')
+        .setRequired(false)
+      )
+      .addRoleOption(option => option
+        .setName('role_ignore')
+        .setDescription('Le rôle pour les personnes ignorées du bot')
+        .setRequired(false)
+      )
+      .addRoleOption(option => option
+        .setName('role_force')
+        .setDescription('Le rôle pour les personnes avec réponse forcée (100% de chance de réponse)')
         .setRequired(false)
       ),
     run: async (inter: ChatInputCommandInteraction) => {
@@ -155,6 +209,30 @@ const commands = {
         reply += `\n- Le pourcentage de chance de réponse à un ping a été mis à ${percentagePing}%`
       }
 
+      /**
+       * Ignored role
+       */
+
+      const roleToIgnore = inter.options.getRole('role_ignore', false)
+
+      if (roleToIgnore !== null) {
+        numberOfChanges++
+        setSetting(inter.guildId, 'ignoredRoleId', roleToIgnore.id)
+        reply += `\n- Le rôle pour les personnes ignorées du bot a été assigné à <@&${roleToIgnore.id}>`
+      }
+
+      /**
+       * Forces role
+       */
+
+      const forcedRole = inter.options.getRole('role_force', false)
+
+      if (forcedRole !== null) {
+        numberOfChanges++
+        setSetting(inter.guildId, 'forcedAnswerRoleId', forcedRole.id)
+        reply += `\n- Le rôle pour les personnes ignorées du bot a été assigné à <@&${forcedRole.id}>`
+      }
+
       if (numberOfChanges === 0) {
         reply = 'Aucun changement n\'a été effectué'
       }
@@ -169,7 +247,8 @@ const commands = {
     command: new SlashCommandBuilder()
       .setName('get-config')
       .setDescription('Affiche la configuration du bot')
-      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+      .setDMPermission(false),
     run: async (inter: ChatInputCommandInteraction) => {
       if (inter.guildId == null) {
         return inter.reply({
@@ -182,6 +261,9 @@ const commands = {
       const quoicoubehAnswerPercentage = getSetting(inter.guildId, 'quoicoubehAnswerPercentage')
       const feurAnswerPercentage = getSetting(inter.guildId, 'feurAnswerPercentage')
       const mentionAnswerPercentage = getSetting(inter.guildId, 'mentionAnswerPercentage')
+
+      const ignoredRolesId = getSetting(inter.guildId, 'ignoredRoleId')
+      const forcedAnswerRolesId = getSetting(inter.guildId, 'forcedAnswerRoleId')
 
       let ignoredChannelsString = getIgnoredChannels(inter.guildId).map(channel => `<#${channel.channelId}>`).join(', ') || 'Aucuns'
 
@@ -225,6 +307,16 @@ const commands = {
                 name: 'Salons ignorés',
                 value: ignoredChannelsString,
                 inline: false
+              },
+              {
+                name: 'Rôles ignorés',
+                value: ignoredRolesId ? `<@&${ignoredRolesId}>` : 'Aucun',
+                inline: true
+              },
+              {
+                name: 'Rôles à réponse forcée',
+                value: forcedAnswerRolesId ? `<@&${forcedAnswerRolesId}>` : 'Aucun',
+                inline: true
               }
             ])
 

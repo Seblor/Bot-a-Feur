@@ -69,6 +69,7 @@ client.on('ready', async () => {
 
   client.application?.commands.set([
     commands['channel-ignore'].command,
+    commands['retire-role'].command,
     commands['get-config'].command,
     commands['set-config'].command,
   ])
@@ -82,13 +83,16 @@ client.on('interactionCreate', async (interaction: Interaction) => {
 
   switch (true) {
     case interaction.isChatInputCommand() && interaction.commandName === 'channel-ignore':
-      await commands['channel-ignore'].run(interaction as ChatInputCommandInteraction)
+      await commands['channel-ignore'].run(interaction)
+      break;
+    case interaction.isChatInputCommand() && interaction.commandName === 'retire-role':
+      await commands['retire-role'].run(interaction)
       break;
     case interaction.isChatInputCommand() && interaction.commandName === 'get-config':
-      await commands['get-config'].run(interaction as ChatInputCommandInteraction)
+      await commands['get-config'].run(interaction)
       break;
     case interaction.isChatInputCommand() && interaction.commandName === 'set-config':
-      await commands['set-config'].run(interaction as ChatInputCommandInteraction)
+      await commands['set-config'].run(interaction)
       break;
   }
 })

@@ -8,6 +8,8 @@ const settingsDefaultValues = {
   quoicoubehAnswerPercentage: 100,
   feurAnswerPercentage: 100,
   mentionAnswerPercentage: 100,
+  forcedAnswerRoleId: null as string | null,
+  ignoredRoleId: null as string | null,
 };
 
 /**
@@ -35,7 +37,9 @@ async function initDb() {
       quoiAnswerPercentage INTEGER NOT NULL DEFAULT ${settingsDefaultValues.quoiAnswerPercentage},
       quoicoubehAnswerPercentage INTEGER NOT NULL DEFAULT ${settingsDefaultValues.quoicoubehAnswerPercentage},
       feurAnswerPercentage INTEGER NOT NULL DEFAULT ${settingsDefaultValues.feurAnswerPercentage},
-      mentionAnswerPercentage INTEGER NOT NULL DEFAULT ${settingsDefaultValues.mentionAnswerPercentage}
+      mentionAnswerPercentage INTEGER NOT NULL DEFAULT ${settingsDefaultValues.mentionAnswerPercentage},
+      forcedAnswerRoleId VARCHAR,
+      ignoredRoleId VARCHAR
     );
   `);
 }
@@ -63,7 +67,9 @@ export async function removeChannelFromIgnoreList(channelId: string) {
   `, [channelId]);
 }
 
-export function setSetting(guildId: string, setting: keyof typeof settingsDefaultValues, value: string | number) {
+export function setSetting(guildId: string, setting: `${keyof ReturnType<typeof createTriggersChecklist>}AnswerPercentage`, value: number): any;
+export function setSetting(guildId: string, setting: 'forcedAnswerRoleId' | 'ignoredRoleId', value: string | null): any;
+export function setSetting(guildId: string, setting: keyof typeof settingsDefaultValues, value: string | number | null) {
   return db.run(`
     INSERT INTO Config (guildId, ${setting})
     VALUES (?, ?)
@@ -72,6 +78,7 @@ export function setSetting(guildId: string, setting: keyof typeof settingsDefaul
 }
 
 export function getSetting(guildId: string, setting: `${keyof ReturnType<typeof createTriggersChecklist>}AnswerPercentage`): number;
+export function getSetting(guildId: string, setting: 'forcedAnswerRoleId' | 'ignoredRoleId'): string | null;
 export function getSetting(guildId: string, setting: keyof typeof settingsDefaultValues) {
   const values = db.prepare(`
     SELECT ${setting}

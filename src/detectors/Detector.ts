@@ -1,12 +1,23 @@
 import { Message } from "discord.js";
 import { getSetting } from "../db";
 
+export function createTriggersChecklist() {
+  return {
+    'quoi': false,
+    'feur': false,
+    'mention': false,
+    'quoicoubeh': false,
+  }
+}
+
 /**
  * Base class for all detectors
  * Using a Chain of Responsibility pattern
  */
 export default class Detector {
   protected nextDetector: Detector | null = null
+
+  protected triggerName: keyof ReturnType<typeof createTriggersChecklist> = 'quoi'
 
   /**
    * @param nextDetector The detector that will be checked if this one doesn't detect anything
@@ -25,24 +36,28 @@ export default class Detector {
     if (message.guildId == null) {
       return 0
     }
-    return getSetting(message.guildId, 'quoiAnswerPercentage')
+    return getSetting(message.guildId, `${this.triggerName}AnswerPercentage`)
   }
 
-  async createReply(message: Message): Promise<string | null> {
+  async createReply(message: Message, triggersChecklist?: ReturnType<typeof createTriggersChecklist>): Promise<string | null> {
     if (message.guildId == null) {
       return Promise.reject(new Error('No guild ID'))
     }
 
     const threshold = this.getChanceToReply(message)
 
-    if (Math.floor(Math.random() * 100) < threshold) {
+    triggersChecklist = triggersChecklist ?? createTriggersChecklist()
+
+    if (!triggersChecklist[this.triggerName] && Math.floor(Math.random() * 100) < threshold) {
       const detected = await this.createSpecificReply(message)
       if (detected !== null) {
         return detected
       }
+    } else {
+      triggersChecklist[this.triggerName] = true
     }
     if (this.nextDetector) {
-      return this.nextDetector.createReply(message)
+      return this.nextDetector.createReply(message, triggersChecklist)
     }
     return Promise.resolve('')
   }

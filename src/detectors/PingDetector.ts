@@ -11,19 +11,14 @@ const answers: Array<string> = [
 ]
 
 export default class PingDetector extends Detector {
+  protected triggerName = 'mention' as 'mention'
+
   protected async detect(message: Message): Promise<boolean> {
     if (/(^|\b)(feur|quoicoubeh)(\b|$)/i.test(cleanMessageContent(message))) {
       return false
     }
 
     return message.mentions.parsedUsers.has(message.client.user.id)
-  }
-
-  protected getChanceToReply(message: Message): number {
-    if (message.guildId == null) {
-      return 0
-    }
-    return getSetting(message.guildId, 'mentionAnswerPercentage')
   }
 
   protected async createSpecificReply(message: Message): Promise<string | null> {

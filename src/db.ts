@@ -1,4 +1,5 @@
 import sqlite from 'bun:sqlite';
+import { createTriggersChecklist } from './detectors/Detector';
 
 export const db = sqlite.open('./db.sqlite');
 
@@ -70,10 +71,7 @@ export function setSetting(guildId: string, setting: keyof typeof settingsDefaul
   `, [guildId, value, value]);
 }
 
-export function getSetting(guildId: string, setting: 'quoiAnswerPercentage'): number;
-export function getSetting(guildId: string, setting: 'quoicoubehAnswerPercentage'): number;
-export function getSetting(guildId: string, setting: 'feurAnswerPercentage'): number;
-export function getSetting(guildId: string, setting: 'mentionAnswerPercentage'): number;
+export function getSetting(guildId: string, setting: `${keyof ReturnType<typeof createTriggersChecklist>}AnswerPercentage`): number;
 export function getSetting(guildId: string, setting: keyof typeof settingsDefaultValues) {
   const values = db.prepare(`
     SELECT ${setting}

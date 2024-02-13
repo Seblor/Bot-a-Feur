@@ -12,15 +12,10 @@ const answers: Array<string> = [
 ]
 
 export default class FeurDetector extends Detector {
+  protected triggerName = 'feur' as 'feur'
+
   protected detect(message: Message): boolean {
     return /(?:^|\b)feur(?:\b|$)/i.test(cleanMessageContent(message))
-  }
-
-  protected getChanceToReply(message: Message): number {
-    if (message.guildId == null) {
-      return 0
-    }
-    return getSetting(message.guildId, 'feurAnswerPercentage')
   }
 
   protected createSpecificReply(message: Message): Promise<string | null> {

@@ -11,15 +11,10 @@ const answers: Array<string> = [
 ]
 
 export default class QuoicoubehDetector extends Detector {
+  protected triggerName = 'quoicoubeh' as 'quoicoubeh'
+
   protected detect(message: Message): boolean {
     return /(?:^|\b)(quoi)?coubeh(?:\b|$)/i.test(cleanMessageContent(message))
-  }
-
-  protected getChanceToReply(message: Message): number {
-    if (message.guildId == null) {
-      return 0
-    }
-    return getSetting(message.guildId, 'quoicoubehAnswerPercentage')
   }
 
   protected createSpecificReply(message: Message): Promise<string | null> {

@@ -1,5 +1,5 @@
 // Connect to Discord
-import { Client, IntentsBitField, OAuth2Scopes, WebhookClient, AuditLogEvent, Interaction, PermissionsBitField, Guild, GuildAuditLogsEntry, ChatInputCommandInteraction, ModalSubmitInteraction } from 'discord.js'
+import { Client, IntentsBitField, OAuth2Scopes, WebhookClient, AuditLogEvent, Interaction, PermissionsBitField, Guild, GuildAuditLogsEntry, ChatInputCommandInteraction, ModalSubmitInteraction, Options } from 'discord.js'
 
 import logger from './logger'
 import commands from './commands'
@@ -8,6 +8,10 @@ import { messageEditListener, newMessageListener } from './messageListeners'
 const webhookClient = process.env.LOGS_WEBHOOK ? new WebhookClient({ url: process.env.LOGS_WEBHOOK as string }) : null
 
 const client = new Client({
+  makeCache: Options.cacheWithLimits({
+    MessageManager: 0,
+    // Add more class names here
+  }),
   intents: [
     IntentsBitField.Flags.Guilds,
     IntentsBitField.Flags.GuildMessages,

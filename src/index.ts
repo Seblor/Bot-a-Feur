@@ -10,6 +10,8 @@ const webhookClient = process.env.LOGS_WEBHOOK ? new WebhookClient({ url: proces
 const client = new Client({
   makeCache: Options.cacheWithLimits({
     MessageManager: 0,
+    UserManager: 0,
+    GuildMessageManager: 0,
     // Add more class names here
   }),
   intents: [

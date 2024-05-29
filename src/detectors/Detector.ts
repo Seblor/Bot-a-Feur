@@ -52,7 +52,7 @@ export default class Detector {
     }
 
     const ignoredRoleId = getSetting(message.guildId, 'ignoredRoleId')
-    if (ignoredRoleId !== null && message.member?.roles.cache.has(ignoredRoleId)) {
+    if (ignoredRoleId !== null && (await message.member?.fetch())?.roles.cache.has(ignoredRoleId)) {
       return Promise.resolve('')
     }
 

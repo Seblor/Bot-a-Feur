@@ -16,15 +16,15 @@ Haha ! Je t'ai bien eu !`)
 
 const newMessageModifiers: Array<string | ((message: Message, reply: string) => void)> = [
   `§
-Le saviez-vous ? Vous pouvez m'ajouter à votre serveur, je suis configurable !`,
+||Le saviez-vous ? Vous pouvez m'ajouter à votre serveur, je suis configurable !||`,
   async (message: Message, reply: string) => message.guildId === '113756088230215687'
     ? `${reply}
-Le saviez-vous ? Minecraft-France utilise [Plume](<https://plume.red>) pour aider à la modération !`
+||Le saviez-vous ? Minecraft-France utilise [Plume](<https://plume.red>) pour aider à la modération !||`
     : reply,
   `§
-Le saviez-vous ? C'est Seblor qui m'a créé ! (En plus il est beau)`,
+||Le saviez-vous ? C'est Seblor qui m'a créé ! (En plus il est beau)||`,
   `§
-Le saviez-vous ? Il y a [un timelapse de mon développement](<https://www.youtube.com/watch?v=dQw4w9WgXcQ>)`,
+||Le saviez-vous ? Il y a [un timelapse de mon développement](<https://www.youtube.com/watch?v=dQw4w9WgXcQ>)||`,
   ...newMessageEffects,
   ...Array(50).fill('§') // Filling the array with 50 '$' (a no-op modifier) to decrease the chance of getting a modified reply
 ]

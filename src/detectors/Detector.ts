@@ -8,7 +8,7 @@ enum TriggerState {
   cannotReply, // The trigger has not passed the randomizer
 }
 
-export function createTriggersChecklist() {
+export function createTriggersChecklist () {
   return {
     'quoi': TriggerState.untriggered,
     'feur': TriggerState.untriggered,
@@ -30,23 +30,23 @@ export default class Detector {
    * @param nextDetector The detector that will be checked if this one doesn't detect anything
    * @returns The next detector
    */
-  setNextDetector(nextDetector: Detector): Detector {
+  setNextDetector (nextDetector: Detector): Detector {
     this.nextDetector = nextDetector
     return nextDetector
   }
 
-  protected createSpecificReply(message: Message): Promise<string | null> {
+  protected createSpecificReply (message: Message): Promise<string | null> {
     return Promise.resolve(null);
   }
 
-  protected getChanceToReply(message: Message): number {
+  protected getChanceToReply (message: Message): number {
     if (message.guildId == null) {
       return 0
     }
     return getSetting(message.guildId, `${this.triggerName}AnswerPercentage`)
   }
 
-  async createReply(message: Message, triggersChecklist?: ReturnType<typeof createTriggersChecklist>): Promise<string | null> {
+  async createReply (message: Message, triggersChecklist?: ReturnType<typeof createTriggersChecklist>): Promise<string | null> {
     if (message.guildId == null) {
       return Promise.reject(new Error('No guild ID'))
     }
@@ -56,9 +56,13 @@ export default class Detector {
       return Promise.resolve('')
     }
 
+    const userRoles = message.member?.roles.cache
+
     const forcedRoleId = getSetting(message.guildId, 'forcedAnswerRoleId')
 
-    const threshold = forcedRoleId != null ? 100 : this.getChanceToReply(message)
+    const threshold = (forcedRoleId != null && userRoles?.some(r => r.id === forcedRoleId))
+      ? 100
+      : this.getChanceToReply(message)
 
     triggersChecklist = triggersChecklist ?? createTriggersChecklist()
 
